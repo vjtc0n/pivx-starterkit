@@ -1,6 +1,6 @@
 set -e
 
 # version number argument 3.1.0.2
-VERSION="$1"
+VERSION="latest"
 
-docker build --build-arg VERSION="${VERSION}" -t vjtc0n/pivx:"${VERSION}" -t vjtc0n/pivx:latest .
+docker build -f Dockerfile -t vjtc0n/pivx:"${VERSION}" .
