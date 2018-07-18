@@ -1,0 +1,22 @@
+version: '3'
+  
+services:
+  pivx-qt:
+    image: vjtc0n/pivx:latest
+    container_name: "pivx-qt"
+    network_mode: "bridge"
+    environment:
+      - DISPLAY=$DISPLAY
+    volumes:
+      - '~/pivx:/home/pivx'
+      - '/tmp/.X11-unix:/tmp/.X11-unix'
+    stdin_open: true
+    tty: true
+    command: /usr/local/bin/pivx-qt
+
+  pivx:
+    image: vjtc0n/pivx:latest
+    container_name: "pivx"
+    network_mode: "bridge"
+    volumes:
+      - '~/pivx:/home/pivx'

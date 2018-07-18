@@ -1,0 +1,8 @@
+{
+  "name": "PIVX-starterkit",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "docker-compose up -d"
+  },
+  "license": "MIT"
+}
