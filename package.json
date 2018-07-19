@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "docker-compose up -d -e DISPLAY=$ip:0",
-    "stop": "docker-compose down"
+    "stop": "docker-compose down",
+    "build": "./docker-build-command.sh"
   },
   "license": "MIT"
 }
