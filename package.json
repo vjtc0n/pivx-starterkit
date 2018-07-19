@@ -2,7 +2,8 @@
   "name": "PIVX-starterkit",
   "version": "1.0.0",
   "scripts": {
-    "start": "docker-compose up -d"
+    "start": "docker-compose up -d -e DISPLAY=$ip:0",
+    "stop": "docker-compose down"
   },
   "license": "MIT"
 }
