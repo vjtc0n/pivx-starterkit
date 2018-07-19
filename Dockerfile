@@ -5,6 +5,7 @@ LABEL maintainer="vjtc0n12345@gmail.com"
 USER root
 ENV USER pivx
 ARG VERSION
+ARG BDBVERSION
 
 RUN apt-get update && apt-get install -y software-properties-common \
   && apt-add-repository ppa:bitcoin/bitcoin \
@@ -22,7 +23,10 @@ RUN apt-get update && apt-get install -y software-properties-common \
   libssl-dev \
   libtool \
   pkg-config \
-  wget
+  wget \
+  autotools-dev \
+  autoconf \
+  libminiupnpc-dev
 
 # dependencies for qt-gui
 RUN apt-get install -y --no-install-recommends \
@@ -32,7 +36,8 @@ RUN apt-get install -y --no-install-recommends \
   libqt5dbus5 \
   protobuf-compiler \
   qttools5-dev \
-  qttools5-dev-tools
+  qttools5-dev-tools \
+  libprotobuf-dev
 
 WORKDIR /tmp
 
@@ -60,9 +65,16 @@ RUN gpg --keyserver-options auto-key-retrieve --verify SHA256SUMS.asc
 
 # compile binaries
 RUN mkdir pivx && tar xf pivx-"${VERSION}".tar.gz -C pivx --strip-components 1 \
-  && cd pivx \
+  && mkdir -p /tmp/pivx/db4 \
+  && wget "http://download.oracle.com/berkeley-db/db-${BDBVERSION}.tar.gz" \
+  && echo "12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-${BDBVERSION}.tar.gz" | sha256sum -c \
+  && tar -xzvf db-"${BDBVERSION}".tar.gz \
+  && cd db-"${BDBVERSION}"/build_unix \
+  && ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=/tmp/pivx/db4 \
+  && make install \
+  && cd /tmp/pivx \
   && ./autogen.sh \
-  && ./configure \
+  && ./configure LDFLAGS="-L/tmp/pivx/db4/lib/" CPPFLAGS="-I/tmp/pivx/db4/include/" \
   && make -j1 \
   && make install \
   && cd ~ \
